@@ -27,4 +27,9 @@ public class CustomerController {
     public Customer getAllCustomer(@RequestBody Customer customer){
         return customerRepo.save(customer);
     }
+
+    @DeleteMapping("/customers/{id}")
+    public void getAllCustomer(@RequestParam Long id){
+        customerRepo.deleteById(id);
+    }
 }
