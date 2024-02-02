@@ -5,7 +5,7 @@ pipeline {
     stage('Checkout') {
       steps {
         // Get some code from a GitHub repository
-        git branch: "main", url: 'https://github.com/kczodape/jenkinsfile.git'
+        git branch: "main", url: 'https://github.com/kczodape/DockerJenkinsSpringBootMySQL.git'
       }
     }
         stage('Build') {
