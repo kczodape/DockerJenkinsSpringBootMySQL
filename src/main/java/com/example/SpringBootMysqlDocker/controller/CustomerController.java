@@ -29,7 +29,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/customers/{id}")
-    public void getAllCustomer(@RequestParam Long id){
+    public void getAllCustomer(@PathVariable Long id){
         customerRepo.deleteById(id);
     }
 }
