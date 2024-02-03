@@ -62,7 +62,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>docker-jenkins-integration-sample</finalName>
+		<finalName>docker-githubaction-springboot</finalName>
 	</build>
 
 </project>
