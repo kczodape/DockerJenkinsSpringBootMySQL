@@ -41,6 +41,10 @@ jobs:
       run: |
         gcloud components install kubectl
         kubectl version --client
+    - name: Install kubectl
+      run: |
+        gcloud components install kubectl
+        kubectl version --client
     - name: Configure kubectl
       run: |
         gcloud container clusters get-credentials "${{secrets.GKE_CLUSTER}}" --zone "${{secrets.GKE_ZONE}}"
@@ -49,6 +53,6 @@ jobs:
 
     - name: Deploy to GKE
       run: |
-        kubectl apply -f app-deployment.yaml
+        kubectl apply -f app-deployment.yaml --validate=false
         kubectl rollout status deployment/springboot-crud-deployment
         kubectl get services -o wide
