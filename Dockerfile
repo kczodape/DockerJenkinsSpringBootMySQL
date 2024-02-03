@@ -1,5 +1,8 @@
 FROM openjdk:17-jdk-alpine
-EXPOSE 8181
-ADD target/docker-githubaction-springboot.jar docker-githubaction-springboot.jar
 
-ENTRYPOINT ["java", "-jar" "/docker-githubaction-springboot"]
+EXPOSE 8181
+
+ARG JAR_FILE=target/SpringBootMysqlDocker-0.0.1-SNAPSHOT.jar
+ADD ${JAR_FILE} app.jar
+
+ENTRYPOINT exec java -jar /app.jar
