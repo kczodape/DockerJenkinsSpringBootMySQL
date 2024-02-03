@@ -50,5 +50,5 @@ jobs:
       - name: Deploy to GKE
         run: |
           kubectl apply -f app-deployment.yaml --validate=false
-          kubectl rollout status deployment/springboot-crud-deployment --timeout=15m
+          kubectl rollout status deployment/springboot-crud-deployment
           kubectl get services -o wide
