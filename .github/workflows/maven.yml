@@ -10,7 +10,7 @@ jobs:
   build-and-deploy:
 
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v3
 
@@ -25,17 +25,17 @@ jobs:
         run: mvn clean package -DskipTests
 
       - name: Configure Docker
-        run: gcloud auth configure-docker
+        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
 
       - name: Build Docker Image
         run: |
           echo "Building Docker image..."
-          docker build -t gcr.io/${{secrets.GKE_PROJECT}}/zodape2001/docker-githubaction-springboot:latest .
+          docker build -t ${{secrets.DOCKER_USERNAME}}/docker-githubaction-springboot:latest .
 
-      - name: Push Docker Image to GCR
+      - name: Push Docker Image to Docker Hub
         run: |
-          echo "Pushing Docker image to GCR..."
-          docker push gcr.io/${{secrets.GKE_PROJECT}}/zodape2001/docker-githubaction-springboot:latest
+          echo "Pushing Docker image to Docker Hub..."
+          docker push ${{secrets.DOCKER_USERNAME}}/docker-githubaction-springboot:latest
 
       - name: Google cloud CLI
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@v0.2.1
