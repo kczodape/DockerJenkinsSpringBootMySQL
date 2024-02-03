@@ -30,3 +30,18 @@ jobs:
         dockerfile: Dockerfile
         username: ${{secrets.DOCKER_USERNAME}}
         password: ${{secrets.DOCKER_PASSWORD}}
+    - name: Google cloud CLI
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@v0.2.1
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+      with:
+        service_account_key: ${{secrets.GKE_SA_KEY}}
+        project_id: ${{secrets.GKE_PROJECT}}
+    - name: Configure kubectl
+      run: |
+        gcloud container clusters get-credentials "${{secrets.GKE_CLUSTER}}" --zone "${{secrets.GKE_ZONE}}"
+    - name: Deploy to GKE
+      run: |
+        kubectl apply -f app-deployment.yaml
+        kubectl rollout status deployment/springboot-crud-deployment
+        kubectl get services -o wide
