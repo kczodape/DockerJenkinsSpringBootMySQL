@@ -69,6 +69,6 @@ jobs:
           echo "Applying deployment YAML..."
           kubectl apply -f app-deployment.yaml --validate=false
           echo "Waiting for deployment to finish..."
-          kubectl rollout status deployment/springboot-crud-deployment --timeout=10m
+          kubectl rollout status deployment/springboot-crud-deployment
           echo "Checking services..."
           kubectl get services -o wide
