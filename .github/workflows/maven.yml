@@ -12,47 +12,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'adopt'
-        cache: maven
-    - name: Build with Maven
-      run: mvn clean package -DskipTests
-    - name: Build and push docker image
-      uses: mr-smithers-excellent/docker-build-push@v5
-      with:
-        image: zodape2001/docker-githubaction-springboot
-        tags: latest
-        registry: docker.io
-        dockerfile: Dockerfile
-        username: ${{secrets.DOCKER_USERNAME}}
-        password: ${{secrets.DOCKER_PASSWORD}}
-    - name: Google cloud CLI
-      uses: GoogleCloudPlatform/github-actions/setup-gcloud@v0.2.1
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-      with:
-        service_account_key: ${{secrets.GKE_SA_KEY}}
-        project_id: ${{secrets.GKE_PROJECT}}
-    - name: Install gke-gcloud-auth-plugin
-      run: |
-        gcloud components install kubectl
-        kubectl version --client
-    - name: Install kubectl
-      run: |
-        gcloud components install kubectl
-        kubectl version --client
-    - name: Configure kubectl
-      run: |
-        gcloud container clusters get-credentials "${{secrets.GKE_CLUSTER}}" --zone "${{secrets.GKE_ZONE}}"
-    - name: Update gcloud
-      run: gcloud components update
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          cache: maven
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+      - name: Build and push docker image
+        uses: mr-smithers-excellent/docker-build-push@v5
+        with:
+          image: zodape2001/docker-githubaction-springboot
+          tags: latest
+          registry: docker.io
+          dockerfile: Dockerfile
+          username: ${{secrets.DOCKER_USERNAME}}
+          password: ${{secrets.DOCKER_PASSWORD}}
+      - name: Google cloud CLI
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@v0.2.1
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+        with:
+          service_account_key: ${{secrets.GKE_SA_KEY}}
+          project_id: ${{secrets.GKE_PROJECT}}
+      - name: Install kubectl
+        run: |
+          gcloud components install kubectl
+          kubectl version --client
+      - name: Configure kubectl
+        run: |
+          gcloud container clusters get-credentials "${{secrets.GKE_CLUSTER}}" --zone "${{secrets.GKE_ZONE}}"
+      - name: Update gcloud
+        run: gcloud components update
 
-    - name: Deploy to GKE
-      run: |
-        kubectl apply -f app-deployment.yaml --validate=false
-        kubectl rollout status deployment/springboot-crud-deployment
-        kubectl get services -o wide
+      - name: Deploy to GKE
+        run: |
+          kubectl apply -f app-deployment.yaml --validate=false
+          kubectl rollout status deployment/springboot-crud-deployment --timeout=15m
+          kubectl get services -o wide
